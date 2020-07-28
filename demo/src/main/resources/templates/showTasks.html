@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Tasks</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <h2>List of tasks</h2>
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>User</th>
+            <th>Status</th>
+        </tr>
+
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.getId()}">Id</td>
+            <td th:text="${task.getusername()}">Name</td>
+            <td th:text="${task.getcurrent_status()}">Population</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
