@@ -1,6 +1,8 @@
 package codes.acmc.demo;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -17,7 +19,42 @@ public class Task {
     private Long id;
 
     private String username;
-    private int current_status;
+
+    private enum CurrentStatus {
+        NOT_YET_STARTED(0, "Not yet started"), STARTED(1, "Started"), FINISHED(2, "Finished"), FAILED(3, "Failed");
+
+        private int currentStatus;
+        private String humanReadableCurrentStatus;
+
+        private CurrentStatus(int currentStatus, String humanReadableCurrentStatus) {
+            this.currentStatus = currentStatus;
+            this.humanReadableCurrentStatus = humanReadableCurrentStatus;
+        }
+
+        public int getCurrentStatus() {
+            return this.currentStatus;
+        }
+
+        public String getHumanReadableCurrentStatus() {
+            return humanReadableCurrentStatus;
+        }
+
+        public CurrentStatus findCurrentStatusByInt(int currentStatus) {
+            CurrentStatus resultStatus;
+            try {
+                resultStatus = Arrays.asList(values()).stream()
+                        .filter(statusState -> statusState.currentStatus == currentStatus).collect(Collectors.toList())
+                        .get(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return (resultStatus);
+        };
+    };
+
+    private CurrentStatus current_status;
+
     private String error_msg;
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private Timestamp start_time;
@@ -31,8 +68,7 @@ public class Task {
             @Nullable Timestamp start_time, @Nullable Timestamp end_time) {
         this.id = id;
         this.username = username;
-        this.current_status = current_status;
-        this.error_msg = error_msg;
+        this.current_status = this.current_status.findCurrentStatusByInt(current_status);
         this.start_time = start_time;
         this.end_time = end_time;
     }
@@ -41,43 +77,47 @@ public class Task {
         return this.id;
     }
 
-    public String getusername() {
+    public String getUsername() {
         return this.username;
     }
 
-    public void setusername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public int getcurrent_status() {
-        return this.current_status;
+    public int getCurrentStatus() {
+        return this.current_status.getCurrentStatus();
     }
 
-    public void setcurrent_status(int current_status) {
-        this.current_status = current_status;
+    public String getHumanReadableCurrentStatus() {
+        return this.current_status.getHumanReadableCurrentStatus();
     }
 
-    public String getError_msg() {
+    public void setCurrentStatus(int current_status) {
+        this.current_status = this.current_status.findCurrentStatusByInt(current_status);
+    }
+
+    public String getErrorMsg() {
         return this.error_msg;
     }
 
-    public void setError_msg(String error_msg) {
+    public void setErrorMsg(String error_msg) {
         this.error_msg = error_msg;
     }
 
-    public Timestamp getstart_date() {
+    public Timestamp getStartTime() {
         return this.start_time;
     }
 
-    public void setstart_date(Timestamp start_time) {
+    public void setStartTime(Timestamp start_time) {
         this.start_time = start_time;
     }
 
-    public Timestamp getend_date() {
+    public Timestamp getEndTime() {
         return this.end_time;
     }
 
-    public void setend_date(Timestamp end_time) {
+    public void setEndTime(Timestamp end_time) {
         this.end_time = end_time;
     }
 
