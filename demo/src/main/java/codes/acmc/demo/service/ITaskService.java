@@ -5,4 +5,6 @@ import codes.acmc.demo.Task;
 
 public interface ITaskService {
     List<Task> findAll();
+
+    public void asyncTestMethod();
 }
